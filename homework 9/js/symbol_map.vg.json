@@ -11,29 +11,32 @@
           "format": {"type": "topojson", "feature": "states"}
         },
         "transform": [
-          {"aggregate": [{
-            "op": "count",
-            "as": "pizzas"
-           }], "groupby": ["province"]},
            {
-          "lookup": "properties.states",
+          "lookup": "properties.name",
           "from": {
             "data": {
-              "url": "https://raw.githubusercontent.com/TanJefman2/3179-homework-w9/main/homework%209/data/Datafiniti_Pizza_Restaurants_and_the_Pizza_They_Sell_May19.csv"
+              "url": "https://raw.githubusercontent.com/TanJefman2/3179-homework-w9/main/homework%209/data/pizza_count_by_state.csv"
             },
             "key": "province",
-            "fields": ["province"]
+            "fields": ["pizza_count"]
           }
-        }
-         
+        },
+        {"calculate": "datum.pizza_count+0.1", "as": "new count"}
         
       ],
         "mark": {"type": "geoshape", "stroke": "black"},
+        
         "encoding": {
           "color": {
-            "field": "pizzas",
-            "type": "quantitative"
-          }
+            "field": "new count",
+            "type": "quantitative",
+            "scale": {"type": "log"}
+            
+          },
+          "tooltip": [
+            {"field": "properties.name", "type": "nominal", "title": "State"},
+            {"field": "new count", "type": "quantitative", "title": "Number of pizzas shop"}
+          ]
         }
         
       },
@@ -45,7 +48,11 @@
         "mark": {"type": "circle", "fill":"yellow", "tooltip": {"content": "data"}},
         "encoding": {
           "longitude": {"field": "longitude", "type": "quantitative"},
-          "latitude": {"field": "latitude", "type": "quantitative"}
+          "latitude": {"field": "latitude", "type": "quantitative"},
+          "tooltip": [
+            {"field": "name", "type": "nominal", "title": "Restaurant Name"},
+            {"field": "address", "type": "nominal", "title": "Address"}
+          ]
           
         }
       }
