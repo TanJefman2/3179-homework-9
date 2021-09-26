@@ -1,0 +1,55 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 975,
+    "height": 610,
+    "title": "Pizza served in all around the US",
+    "projection": {"type": "albersUsa"},
+    "layer": [
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/TanJefman2/3179-homework-w9/main/homework%209/js/states-10m.topojson",
+          "format": {"type": "topojson", "feature": "states"}
+        },
+        "transform": [
+          {"aggregate": [{
+            "op": "count",
+            "as": "pizzas"
+           }], "groupby": ["province"]},
+           {
+          "lookup": "properties.states",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/TanJefman2/3179-homework-w9/main/homework%209/data/Datafiniti_Pizza_Restaurants_and_the_Pizza_They_Sell_May19.csv"
+            },
+            "key": "province",
+            "fields": ["province"]
+          }
+        }
+         
+        
+      ],
+        "mark": {"type": "geoshape", "stroke": "black"},
+        "encoding": {
+          "color": {
+            "field": "pizzas",
+            "type": "quantitative"
+          }
+        }
+        
+      },
+      
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/TanJefman2/3179-homework-w9/main/homework%209/data/Datafiniti_Pizza_Restaurants_and_the_Pizza_They_Sell_May19.csv"
+        },
+        "mark": {"type": "circle", "fill":"yellow", "tooltip": {"content": "data"}},
+        "encoding": {
+          "longitude": {"field": "longitude", "type": "quantitative"},
+          "latitude": {"field": "latitude", "type": "quantitative"}
+          
+        }
+      }
+    ]
+  }
+
+  
